@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<root>
+    <doclet-version-NOT-library-version>1.00</doclet-version-NOT-library-version>
+    <class>
+        <name>iSibcheStoreKit</name>
+        <shortname>SibcheStoreKit</shortname>
+        <event>AllPackageListArrived (PackageList as List)</event>
+        <event>PackageInfoArrived (Package as SibchePackage)</event>
+        <event>PackagePurchased (Package as SibchePurchasePackage)</event>
+        <event>ActivePackageListArrived (PackageList as List)</event>
+        <event>LoginSuccess (UserName as String, UserID as String)</event>
+        <event>LogoutSuccess</event>
+        <event>UserDataArrived (Status as String, UserPhone as String, UserID as String)</event>
+        <method>
+            <name DesignerName="Initialize">Initialize::::</name>
+            <comment>Initializes the developer kit implementation code inside the Application_Start function
+ApiKey - The program key taken from the Apple Developer Panel
+Scheme - Add a Scheme specific to your app</comment>
+            <returntype>void</returntype>
+            <parameter>
+                <name>bi</name>
+                <type>B4I*</type>
+            </parameter>
+            <parameter>
+                <name>EventName</name>
+                <type>NSString*</type>
+            </parameter>
+            <parameter>
+                <name>ApiKey</name>
+                <type>NSString*</type>
+            </parameter>
+            <parameter>
+                <name>Scheme</name>
+                <type>NSString*</type>
+            </parameter>
+        </method>
+        <method>
+            <name DesignerName="OpenURL">OpenURL:::</name>
+            <comment>Allow the developer kit to call the url. Should be called from Application_OpenUrl.</comment>
+            <returntype>void</returntype>
+            <parameter>
+                <name>url</name>
+                <type>NSString*</type>
+            </parameter>
+            <parameter>
+                <name>data</name>
+                <type>NSObject*</type>
+            </parameter>
+            <parameter>
+                <name>SourceApplication</name>
+                <type>NSString*</type>
+            </parameter>
+        </method>
+        <method>
+            <name DesignerName="FetchAllInAppPurchasePackage">FetchAllInAppPurchasePackage</name>
+            <comment>After you set up the app, you can see the packages you can buy.
+In response, if successful, the AllPackageListArrived event will be raised with the list of packages that can be purchased.
+These packages are of the type SibchePackage.
+If the request fails, the Error event will be raised with the error.</comment>
+            <returntype>void</returntype>
+        </method>
+        <method>
+            <name DesignerName="FetchInAppPurchasePackage">FetchInAppPurchasePackage:</name>
+            <comment>Get information about the package by having the package ID or bundle code you want.
+In response, if successful, the PackageInfoArrived event will be raised with the package info in the form of a SibchePackage (depending on the package).
+If the request fails, the Error event will be raised with the error.</comment>
+            <returntype>void</returntype>
+            <parameter>
+                <name>packageID</name>
+                <type>NSString*</type>
+            </parameter>
+        </method>
+        <method>
+            <name DesignerName="PurchasePackage">PurchasePackage:</name>
+            <comment>After getting the packages list, you can request to buy these packages via the developer kit facebook code.
+Next, the developer kit will log in if needed and track the payment process.
+It will then inform you of the success or failure of the purchase.
+If successful, the PackagePurchased  event will be raised with the package info in the form of a SibchePurchasePackage.
+If the request fails, the Error event will be raised with the error.</comment>
+            <returntype>void</returntype>
+            <parameter>
+                <name>packageID</name>
+                <type>NSString*</type>
+            </parameter>
+        </method>
+        <method>
+            <name DesignerName="FetchActiveInAppPurchasePackages">FetchActiveInAppPurchasePackages</name>
+            <comment>Get a list of active (purchased) user packages.
+In response, if successful, the ActivePackageListArrived event will be raised with the list of active purchased packages.
+Note that this array is an array of type SibchePurchasePackage.
+If the request fails, the Error event will be raised with the error.
+
+Active packages are packages that have been purchased and have not yet been used or that their expiration date has not expired.
+The definition of apples for active packages for each type of package is as follows:
+SibcheConsumablePackage : SibcheConsumablePackage purchased but not yet consumed.
+SibcheNonConsumablePackage : SibcheNonConsumablePackage purchased. Because these packages are one-time purchases, they are active for life when purchased.
+SibcheSubscriptionPackage : SibcheSubscriptionPackage that have been purchased but have yet to expire.</comment>
+            <returntype>void</returntype>
+        </method>
+        <method>
+            <name DesignerName="ConsumePurchasePackage">ConsumePurchasePackage:</name>
+            <comment>Consume consumable packages
+If you want to use usable packages on the client side (within the game / application itself), you should use this method.
+If successful, it means that the package is successfully consumed and if it fails, we have trouble consuming the package.
+If the request fails, the Error event will be raised with the error.</comment>
+            <returntype>void</returntype>
+            <parameter>
+                <name>purchasePackageId</name>
+                <type>NSString*</type>
+            </parameter>
+        </method>
+        <method>
+            <name DesignerName="LoginUser">LoginUser</name>
+            <comment>Request User Login to Apple Developer Kit
+We recommend not using this section manually because in the payment process, if the user is not logged in, their apple library will log on to the user.
+
+In response, if successful, the LoginSuccess event will be raised with the username and ID of the user.
+If the request fails, the Error event will be raised with the error.</comment>
+            <returntype>void</returntype>
+        </method>
+        <method>
+            <name DesignerName="LogoutUser">LogoutUser</name>
+            <comment>Log out the current logged-in user from the Developer Kit and erase all session information.
+We strongly recommend using this function when the user presses the Purchase Recovery button and requests his Purchase Recovery.
+
+The LogoutSuccess event will be raised.</comment>
+            <returntype>void</returntype>
+        </method>
+        <method>
+            <name DesignerName="GetCurrentUserData">GetCurrentUserData</name>
+            <comment>Get current user's phone number and userId
+In response, if successful, the UserDataArrived event will be raised with the user's phone number, user id and login status.
+If it is logged in, its ‍login status will be 'IsLoggedIn‍‍'.
+If not logged in, its ‍login status will be 'IsLoggedOut'.
+If the operation is unsuccessful and the status of the user's logon not know its ‍login status will be 'HaveTokenButFailedToCheck'.
+If the request fails, the Error event will be raised with the error.</comment>
+            <returntype>void</returntype>
+        </method>
+    </class>
+    <class>
+        <name>B4ISibcheError</name>
+        <shortname>SibcheError</shortname>
+        <objectwrapper>SibcheError*</objectwrapper>
+        <property>
+            <name>errorCode</name>
+            <comment>This is the same error number as created in the following table
+
+1000    Unknown error
+1001    This package has already been purchased
+1002    User discontinued operation
+1003    We are having trouble logging in
+1004    The application was not initiated correctly</comment>
+            <returntype>long</returntype>
+        </property>
+        <property>
+            <name>statusCode</name>
+            <comment>This is the same http error number that the server responded to.</comment>
+            <returntype>long</returntype>
+        </property>
+        <property>
+            <name>message</name>
+            <comment>There is an error message received from the server</comment>
+            <returntype>NSString*</returntype>
+        </property>
+    </class>
+    <class>
+        <name>B4ISibchePackage</name>
+        <shortname>SibchePackage</shortname>
+        <objectwrapper>SibchePackage*</objectwrapper>
+        <property>
+            <name>packageId</name>
+            <returntype>NSString*</returntype>
+        </property>
+        <property>
+            <name>type</name>
+            <returntype>NSString*</returntype>
+        </property>
+        <property>
+            <name>code</name>
+            <returntype>NSString*</returntype>
+        </property>
+        <property>
+            <name>name</name>
+            <returntype>NSString*</returntype>
+        </property>
+        <property>
+            <name>packageDescription</name>
+            <returntype>NSString*</returntype>
+        </property>
+        <property>
+            <name>price</name>
+            <returntype>double</returntype>
+        </property>
+        <property>
+            <name>totalPrice</name>
+            <returntype>double</returntype>
+        </property>
+        <property>
+            <name>discount</name>
+            <returntype>double</returntype>
+        </property>
+    </class>
+    <class>
+        <name>B4ISibcheSubscriptionPackage</name>
+        <shortname>SibcheSubscriptionPackage</shortname>
+        <objectwrapper>SibcheSubscriptionPackage*</objectwrapper>
+        <property>
+            <name>packageId</name>
+            <returntype>NSString*</returntype>
+        </property>
+        <property>
+            <name>type</name>
+            <returntype>NSString*</returntype>
+        </property>
+        <property>
+            <name>code</name>
+            <returntype>NSString*</returntype>
+        </property>
+        <property>
+            <name>name</name>
+            <returntype>NSString*</returntype>
+        </property>
+        <property>
+            <name>packageDescription</name>
+            <returntype>NSString*</returntype>
+        </property>
+        <property>
+            <name>price</name>
+            <returntype>double</returntype>
+        </property>
+        <property>
+            <name>totalPrice</name>
+            <returntype>double</returntype>
+        </property>
+        <property>
+            <name>discount</name>
+            <returntype>double</returntype>
+        </property>
+        <property>
+            <name>group</name>
+            <returntype>NSString*</returntype>
+        </property>
+        <property>
+            <name>duration</name>
+            <returntype>double</returntype>
+        </property>
+    </class>
+    <class>
+        <name>B4ISibchePurchasePackage</name>
+        <shortname>SibchePurchasePackage</shortname>
+        <objectwrapper>SibchePurchasePackage*</objectwrapper>
+        <property>
+            <name>purchasePackageId</name>
+            <returntype>NSString*</returntype>
+        </property>
+        <property>
+            <name>type</name>
+            <returntype>NSString*</returntype>
+        </property>
+        <property>
+            <name>code</name>
+            <returntype>NSString*</returntype>
+        </property>
+        <property>
+            <name>expireAt</name>
+            <returntype>long long</returntype>
+        </property>
+        <property>
+            <name>createdAt</name>
+            <returntype>long long</returntype>
+        </property>
+        <property>
+            <name>package</name>
+            <returntype>B4ISibchePackage*</returntype>
+        </property>
+    </class>
+    <version>1</version>
+    <author>Brandsum</author>
+    <dependsOn>SibcheStoreKit.swift.framework.3</dependsOn>
+</root>
